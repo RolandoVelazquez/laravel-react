@@ -32,7 +32,6 @@ class Raza extends Controller
             'nombre' => 'required',
             'tamano_id' => 'required',
             'fecha_nacimiento' => 'required',
-            'senas_particulares' => 'required',
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
@@ -49,6 +48,30 @@ class Raza extends Controller
             ]
         );
         return response()->json(["complete"=>true]);
+    }
+    function editPerrito(Request $request){
+        $rules = [
+            'raza_id' => 'required',
+            'sexo' => 'required',
+            'nombre' => 'required',
+            'tamano_id' => 'required',
+            'fecha_nacimiento' => 'required',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()]);
+        }
+        $perrito = Perritos::find($request->idPerrito);
+        $perrito->raza_id= intval($request->raza_id);
+        $perrito->sexo_id=intval($request->sexo);
+        $perrito->nombre=$request->nombre;
+        $perrito->tamano_id=intval($request->tamano_id);
+        $perrito->fecha_nacimiento=$request->fecha_nacimiento;
+        $perrito->senas_particulares=$request->senas_particulares;
+        if ($perrito->save()){
+            return response()->json(["complete"=>true]);
+        }
+        return response()->json(["complete"=>false]);
     }
     function deletePerrito($id){
         $perrito = Perritos::find($id);

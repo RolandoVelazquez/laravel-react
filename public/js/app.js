@@ -43105,7 +43105,9 @@ var ContentRazas = /*#__PURE__*/function (_React$Component) {
       razaId: 1,
       fechaNacimiento: '',
       senasParticulares: '',
-      foto: ''
+      foto: '',
+      editando: false,
+      editando_id: 0
     };
     _this.handleNombre = _this.handleNombre.bind(_assertThisInitialized(_this));
     _this.handleSenas = _this.handleSenas.bind(_assertThisInitialized(_this));
@@ -43113,7 +43115,10 @@ var ContentRazas = /*#__PURE__*/function (_React$Component) {
     _this.dropdownChangeRaza = _this.dropdownChangeRaza.bind(_assertThisInitialized(_this));
     _this.dropdownChangeTamano = _this.dropdownChangeTamano.bind(_assertThisInitialized(_this));
     _this.submitButton = _this.submitButton.bind(_assertThisInitialized(_this));
+    _this.editButton = _this.editButton.bind(_assertThisInitialized(_this));
     _this.ButtonDelete = _this.ButtonDelete.bind(_assertThisInitialized(_this));
+    _this.ButtonDelete = _this.ButtonDelete.bind(_assertThisInitialized(_this));
+    _this.ButtonOpenModal = _this.ButtonOpenModal.bind(_assertThisInitialized(_this));
     _this.changeFechaNacimiento = _this.changeFechaNacimiento.bind(_assertThisInitialized(_this));
     return _this;
   }
@@ -43238,7 +43243,8 @@ var ContentRazas = /*#__PURE__*/function (_React$Component) {
             sexo: 1,
             tamanoId: 1,
             fechaNacimiento: "",
-            razaId: 1
+            razaId: 1,
+            editando: false
           });
 
           materialize_css__WEBPACK_IMPORTED_MODULE_3___default.a.Modal.init(_this3.Modal).close();
@@ -43247,14 +43253,79 @@ var ContentRazas = /*#__PURE__*/function (_React$Component) {
       });
     }
   }, {
-    key: "ButtonDelete",
-    value: function ButtonDelete(id) {
+    key: "editButton",
+    value: function editButton(e) {
       var _this4 = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_2___default.a["delete"]("/delete-perrito/".concat(id)).then(function (res) {
+      e.preventDefault();
+      var _this$state2 = this.state,
+          nombre = _this$state2.nombre,
+          senasParticulares = _this$state2.senasParticulares,
+          sexo = _this$state2.sexo,
+          tamanoId = _this$state2.tamanoId,
+          fechaNacimiento = _this$state2.fechaNacimiento,
+          razaId = _this$state2.razaId,
+          editando_id = _this$state2.editando_id;
+      var infoPerrito = {
+        nombre: nombre,
+        senas_particulares: senasParticulares,
+        sexo: sexo,
+        tamano_id: tamanoId,
+        raza_id: razaId,
+        fecha_nacimiento: fechaNacimiento,
+        idPerrito: editando_id
+      };
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.patch("/edit-perrito", infoPerrito).then(function (res) {
         if (res.data.complete) {
           axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/inforazas').then(function (res) {
             _this4.setState({
+              informacion: res.data,
+              isLoaded: true
+            });
+
+            var tabs = document.querySelectorAll('.tabs');
+
+            for (var i = 0; i < tabs.length; i++) {
+              materialize_css__WEBPACK_IMPORTED_MODULE_3___default.a.Tabs.init(tabs[i]);
+            }
+
+            var collapsibles = document.querySelectorAll('.collapsible');
+
+            for (var i = 0; i < collapsibles.length; i++) {
+              materialize_css__WEBPACK_IMPORTED_MODULE_3___default.a.Collapsible.init(collapsibles[i]);
+            }
+          });
+
+          _this4.setState({
+            nombre: "",
+            senasParticulares: "",
+            sexo: 1,
+            tamanoId: 1,
+            fechaNacimiento: "",
+            razaId: 1,
+            editando: false
+          });
+
+          materialize_css__WEBPACK_IMPORTED_MODULE_3___default.a.Modal.init(_this4.Modal).close();
+          materialize_css__WEBPACK_IMPORTED_MODULE_3___default.a.updateTextFields();
+        }
+      });
+    }
+  }, {
+    key: "ButtonDelete",
+    value: function ButtonDelete(key, id) {
+      var _this5 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a["delete"]("/delete-perrito/".concat(id)).then(function (res) {
+        if (res.data.complete) {
+          var collapsibles = document.querySelectorAll('.collapsible');
+
+          for (var i = 0; i < collapsibles.length; i++) {
+            materialize_css__WEBPACK_IMPORTED_MODULE_3___default.a.Collapsible.init(collapsibles[i]).close(key);
+          }
+
+          axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/inforazas').then(function (res) {
+            _this5.setState({
               informacion: res.data,
               isLoaded: true
             });
@@ -43275,13 +43346,51 @@ var ContentRazas = /*#__PURE__*/function (_React$Component) {
       });
     }
   }, {
+    key: "ButtonOpenModal",
+    value: function ButtonOpenModal(e) {
+      this.setState({
+        nombre: "",
+        senasParticulares: "",
+        sexo: 1,
+        tamanoId: 1,
+        fechaNacimiento: "",
+        razaId: 1,
+        editando: false
+      });
+      materialize_css__WEBPACK_IMPORTED_MODULE_3___default.a.Modal.init(this.Modal).open();
+      e.preventDefault();
+    }
+  }, {
+    key: "ButtonEdit",
+    value: function ButtonEdit(key, perrito) {
+      this.setState({
+        editando: true,
+        editando_id: perrito.id
+      });
+      this.setState({
+        nombre: perrito.nombre,
+        senasParticulares: perrito.senas_particulares,
+        sexo: perrito.sexo_id,
+        tamanoId: perrito.tamano_id,
+        fechaNacimiento: perrito.fecha_nacimiento,
+        razaId: perrito.raza_id
+      });
+      var collapsibles = document.querySelectorAll('.collapsible');
+
+      for (var i = 0; i < collapsibles.length; i++) {
+        materialize_css__WEBPACK_IMPORTED_MODULE_3___default.a.Collapsible.init(collapsibles[i]).close(key);
+      }
+
+      materialize_css__WEBPACK_IMPORTED_MODULE_3___default.a.Modal.init(this.Modal).open();
+    }
+  }, {
     key: "render",
     value: function render() {
-      var _this5 = this;
+      var _this6 = this;
 
-      var _this$state2 = this.state,
-          informacion = _this$state2.informacion,
-          isLoaded = _this$state2.isLoaded;
+      var _this$state3 = this.state,
+          informacion = _this$state3.informacion,
+          isLoaded = _this$state3.isLoaded;
 
       if (!isLoaded) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), "Cargando ...");
@@ -43299,7 +43408,7 @@ var ContentRazas = /*#__PURE__*/function (_React$Component) {
             className: "col s12 "
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
             className: "collapsible popout"
-          }, item.get_perritos.map(function (perrito) {
+          }, item.get_perritos.map(function (perrito, key) {
             return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
               key: perrito.id
             }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -43318,46 +43427,39 @@ var ContentRazas = /*#__PURE__*/function (_React$Component) {
               className: "blue-text"
             }, "Tama\xF1o: "), " ", perrito.get_tamano.tamano), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
               className: "blue-text"
-            }, "Fecha de nacimiento: "), " ", perrito.fecha_nacimiento)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-              className: "btn-small yellow darken-1"
-            }, "Editar"), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+            }, "Fecha de nacimiento: "), " ", perrito.fecha_nacimiento), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+              className: "blue-text"
+            }, "Se\xF1as perticulares: "), perrito.senas_particulares ? perrito.senas_particulares : "Sin señas particulares")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+              className: "btn-small yellow darken-1",
+              onClick: function onClick() {
+                return _this6.ButtonEdit(key, perrito);
+              }
+            }, "Editar"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
               className: "btn-small red darken-2",
               onClick: function onClick() {
-                return _this5.ButtonDelete(perrito.id);
+                return _this6.ButtonDelete(key, perrito.id);
               }
             }, "Eliminar")));
           }))))));
         }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "fixed-action-btn",
           ref: function ref(floatingButton) {
-            _this5.floatingButton = floatingButton;
+            _this6.floatingButton = floatingButton;
           }
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-          className: "btn-floating btn-large"
+          className: "btn-floating btn-large",
+          onClick: this.ButtonOpenModal
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
           className: "large material-icons"
-        }, "apps")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-          className: "btn-floating red"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-          className: "material-icons"
-        }, "delete"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-          className: "btn-floating yellow darken-1"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-          className: "material-icons"
-        }, "edit"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-          className: "btn-floating green modal-trigger",
-          href: "#modaladd"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-          className: "material-icons"
-        }, "add"))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        }, "add"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           ref: function ref(Modal) {
-            _this5.Modal = Modal;
+            _this6.Modal = Modal;
           },
           id: "modaladd",
           className: "modal bottom-sheet"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "modal-content"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", null, "Agregar Perrito"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", null, this.state.editando ? "Editando perrito ".concat(this.state.nombre) : 'Agregar Perrito'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "container"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "row"
@@ -43373,14 +43475,15 @@ var ContentRazas = /*#__PURE__*/function (_React$Component) {
           value: this.state.nombre,
           onChange: this.handleNombre
         }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-          htmlFor: "nombre"
+          htmlFor: "nombre",
+          className: this.state.editando ? 'active' : ''
         }, "Nombre")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "input-field col s6"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
           ref: function ref(SelectSexo) {
-            _this5.SelectSexo = SelectSexo;
+            _this6.SelectSexo = SelectSexo;
           },
-          defaultValue: this.state.sexo,
+          defaultValue: "0",
           onChange: this.dropdownChangeSexo.bind(this)
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
           value: "0",
@@ -43399,14 +43502,15 @@ var ContentRazas = /*#__PURE__*/function (_React$Component) {
           value: this.state.fechaNacimiento,
           onChange: this.changeFechaNacimiento
         }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-          htmlFor: "fechaNacimiento"
+          htmlFor: "fechaNacimiento",
+          className: this.state.editando ? 'active' : ''
         }, "Fecha Nacimiento (yyyy-mm-dd)")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "input-field col s6"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
           ref: function ref(SelectTamano) {
-            _this5.SelectTamano = SelectTamano;
+            _this6.SelectTamano = SelectTamano;
           },
-          defaultValue: this.state.tamanoId,
+          defaultValue: "0",
           onChange: this.dropdownChangeTamano.bind(this)
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
           value: "0",
@@ -43424,17 +43528,18 @@ var ContentRazas = /*#__PURE__*/function (_React$Component) {
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
           id: "senasparticulares",
           type: "text",
-          defaultValue: this.state.senasParticulares,
+          value: this.state.senasParticulares,
           onChange: this.handleSenas.bind(this)
         }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-          htmlFor: "senasparticulares"
+          htmlFor: "senasparticulares",
+          className: this.state.editando && this.state.senasParticulares ? 'active' : ''
         }, "Se\xF1as Particulares")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "input-field col s6"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
           ref: function ref(SelectRaza) {
-            _this5.SelectRaza = SelectRaza;
+            _this6.SelectRaza = SelectRaza;
           },
-          defaultValue: this.state.razaId,
+          defaultValue: 0,
           onChange: this.dropdownChangeRaza.bind(this)
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
           value: "0",
@@ -43453,12 +43558,25 @@ var ContentRazas = /*#__PURE__*/function (_React$Component) {
           className: "row"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "col s12"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        }, this.state.editando ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          className: "btn teal darken-3",
+          onClick: this.editButton
+        }, "Editar ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+          className: "material-icons right"
+        }, "edit")) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           className: "btn ",
           onClick: this.submitButton
         }, "Enviar", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
           className: "material-icons right"
-        }, "send"))))))))));
+        }, "send")), "\xA0", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          className: "btn red darken-4",
+          onClick: function onClick(e) {
+            e.preventDefault();
+            materialize_css__WEBPACK_IMPORTED_MODULE_3___default.a.Modal.init(_this6.Modal).close();
+          }
+        }, "Cancelar", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+          className: "material-icons right"
+        }, "edit"))))))))));
       }
     }
   }, {

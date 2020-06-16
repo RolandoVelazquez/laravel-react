@@ -22,3 +22,4 @@ Route::get('/raza','api\Raza@getRazas');
 Route::get('/inforazas','api\Raza@getInfoRazas');
 Route::post('/add-perrito','api\Raza@addPerrito');
 Route::delete('/delete-perrito/{id}','api\Raza@deletePerrito');
+Route::patch('/edit-perrito','api\Raza@editPerrito');

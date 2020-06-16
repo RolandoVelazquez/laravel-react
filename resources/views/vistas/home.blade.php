@@ -1,5 +1,7 @@
 @extends('default')
 @section('titulo') Perritos @endsection
 @section('contenido')
-    <div class="uk-position-center"><h2>Bienvenido</h2></div>
+    <div>
+        <h1 class="center-align">Bienvenido</h1>
+    </div>
 @endsection
