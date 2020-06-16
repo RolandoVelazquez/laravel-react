@@ -13,4 +13,5 @@ class Raza extends Model
     function getPerritos(){
         return $this->hasMany(Perritos::class);
     }
+
 }

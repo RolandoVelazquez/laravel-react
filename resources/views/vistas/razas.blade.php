@@ -1,14 +1,24 @@
 @extends('default')
+@section('nav-content')
+    <div class="nav-content">
+        <ul class="tabs tabs-transparent">
+            @foreach($razas as $raza)
+                <li class="tab"><a href="#tab{{$raza->id}}">{{$raza->raza}}</a></li>
+            @endforeach
+        </ul>
+    </div>
+@endsection
 @section('titulo') Raza @endsection
 @section('contenido')
-    <div class="uk-child-width-1-3@m uk-grid-match" uk-grid>
-        @foreach($razas as $raza)
-            <div>
-                <div class="uk-card uk-card-default uk-card-hover uk-card-body">
-                    <h3 class="uk-card-title">{{$raza->raza}}</h3>
-                    <a href="{{route('verraza', ['raza'=>$raza->id])}}">Ver</a>
-                </div>
-            </div>
-        @endforeach
-    </div>
+    <div id="ContentRazas"></div>
+@endsection
+@section('extra-script')
+    <script>
+        var tabs = document.querySelectorAll('.tabs')
+        for (var i = 0; i < tabs.length; i++) {
+            M.Tabs.init(tabs[i]);
+        }
+
+
+    </script>
 @endsection
