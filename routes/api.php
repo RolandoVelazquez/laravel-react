@@ -20,3 +20,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/raza','api\Raza@getRazas');
 Route::get('/inforazas','api\Raza@getInfoRazas');
+Route::post('/add-perrito','api\Raza@addPerrito');
+Route::delete('/delete-perrito/{id}','api\Raza@deletePerrito');

@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Perritos extends Model
 {
+    use SoftDeletes;
     protected $table = 'perritos';
-    protected $fillable = ['raza','sexo','nombre','tamano', 'fecha_nacimiento','senas_particulares','foto'];
-    protected $hidden = ['created_at','updated_at'];
+    protected $fillable = ['raza_id','sexo_id','nombre','tamano_id', 'fecha_nacimiento','senas_particulares','foto'];
+    protected $hidden = ['deleted_at','created_at','updated_at'];
     function getRaza(){
         return  $this->belongsTo(Raza::class,'raza_id');
     }

@@ -22,6 +22,7 @@ class CreatePerritosTable extends Migration
             $table->date('fecha_nacimiento');
             $table->string('senas_particulares')->nullable();
             $table->string('foto')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

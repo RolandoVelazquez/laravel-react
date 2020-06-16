@@ -6,8 +6,7 @@
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li class="{{Route::currentRouteName() === "home"? 'active':''}}"><a href="{{route('home')}}">Home</a></li>
                 <li class="{{Route::currentRouteName() === "razas"? 'active':''}}"><a href="{{route('razas')}}">Razas</a></li>
-                <li class="{{Route::currentRouteName() === "sexo"? 'active':''}}"><a href="{{route('sexo')}}">Sexo</a></li>
-                <li class="{{Route::currentRouteName() === "tamano"? 'active':''}}"><a href="{{route('tamano')}}">Tamaño</a></li>
+
             </ul>
         </div>
         @yield('nav-content')
@@ -17,7 +16,6 @@
 <ul class="sidenav" id="mobile-demo">
     <li class="{{Route::currentRouteName() === "home"? 'active':''}}"><a href="{{route('home')}}">Home</a></li>
     <li class="{{Route::currentRouteName() === "razas"? 'active':''}}"><a href="{{route('razas')}}">Razas</a></li>
-    <li class="{{Route::currentRouteName() === "sexo"? 'active':''}}"><a href="{{route('sexo')}}">Sexo</a></li>
-    <li class="{{Route::currentRouteName() === "tamano"? 'active':''}}"><a href="{{route('tamano')}}">Tamaño</a></li>
+
 </ul>
 

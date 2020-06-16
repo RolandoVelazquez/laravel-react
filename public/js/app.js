@@ -43098,8 +43098,23 @@ var ContentRazas = /*#__PURE__*/function (_React$Component) {
     _this = _super.call(this, props);
     _this.state = {
       informacion: {},
-      isLoaded: false
+      isLoaded: false,
+      sexo: 1,
+      nombre: '',
+      tamanoId: 1,
+      razaId: 1,
+      fechaNacimiento: '',
+      senasParticulares: '',
+      foto: ''
     };
+    _this.handleNombre = _this.handleNombre.bind(_assertThisInitialized(_this));
+    _this.handleSenas = _this.handleSenas.bind(_assertThisInitialized(_this));
+    _this.dropdownChangeSexo = _this.dropdownChangeSexo.bind(_assertThisInitialized(_this));
+    _this.dropdownChangeRaza = _this.dropdownChangeRaza.bind(_assertThisInitialized(_this));
+    _this.dropdownChangeTamano = _this.dropdownChangeTamano.bind(_assertThisInitialized(_this));
+    _this.submitButton = _this.submitButton.bind(_assertThisInitialized(_this));
+    _this.ButtonDelete = _this.ButtonDelete.bind(_assertThisInitialized(_this));
+    _this.changeFechaNacimiento = _this.changeFechaNacimiento.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -43127,16 +43142,146 @@ var ContentRazas = /*#__PURE__*/function (_React$Component) {
         }
 
         materialize_css__WEBPACK_IMPORTED_MODULE_3___default.a.Modal.init(_this2.Modal);
+        materialize_css__WEBPACK_IMPORTED_MODULE_3___default.a.FloatingActionButton.init(_this2.floatingButton);
+        materialize_css__WEBPACK_IMPORTED_MODULE_3___default.a.FormSelect.init(_this2.SelectSexo);
+        materialize_css__WEBPACK_IMPORTED_MODULE_3___default.a.FormSelect.init(_this2.SelectTamano);
+        materialize_css__WEBPACK_IMPORTED_MODULE_3___default.a.FormSelect.init(_this2.SelectRaza);
+      });
+    }
+  }, {
+    key: "dropdownChangeSexo",
+    value: function dropdownChangeSexo(e) {
+      this.setState({
+        sexo: e.target.value
+      });
+    }
+  }, {
+    key: "dropdownChangeRaza",
+    value: function dropdownChangeRaza(e) {
+      this.setState({
+        razaId: e.target.value
+      });
+    }
+  }, {
+    key: "handleNombre",
+    value: function handleNombre(e) {
+      this.setState({
+        nombre: e.target.value
+      });
+    }
+  }, {
+    key: "handleSenas",
+    value: function handleSenas(e) {
+      this.setState({
+        senasParticulares: e.target.value
+      });
+    }
+  }, {
+    key: "dropdownChangeTamano",
+    value: function dropdownChangeTamano(e) {
+      this.setState({
+        tamanoId: e.target.value
+      });
+    }
+  }, {
+    key: "changeFechaNacimiento",
+    value: function changeFechaNacimiento(e) {
+      this.setState({
+        fechaNacimiento: e.target.value
+      });
+    }
+  }, {
+    key: "submitButton",
+    value: function submitButton(event) {
+      var _this3 = this;
+
+      event.preventDefault();
+      var _this$state = this.state,
+          nombre = _this$state.nombre,
+          senasParticulares = _this$state.senasParticulares,
+          sexo = _this$state.sexo,
+          tamanoId = _this$state.tamanoId,
+          fechaNacimiento = _this$state.fechaNacimiento,
+          razaId = _this$state.razaId;
+      var infoPerrito = {
+        nombre: nombre,
+        senas_particulares: senasParticulares,
+        sexo: sexo,
+        tamano_id: tamanoId,
+        raza_id: razaId,
+        fecha_nacimiento: fechaNacimiento
+      };
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/add-perrito', infoPerrito).then(function (res) {
+        if (res.data.complete) {
+          axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/inforazas').then(function (res) {
+            _this3.setState({
+              informacion: res.data,
+              isLoaded: true
+            });
+
+            var tabs = document.querySelectorAll('.tabs');
+
+            for (var i = 0; i < tabs.length; i++) {
+              materialize_css__WEBPACK_IMPORTED_MODULE_3___default.a.Tabs.init(tabs[i]);
+            }
+
+            var collapsibles = document.querySelectorAll('.collapsible');
+
+            for (var i = 0; i < collapsibles.length; i++) {
+              materialize_css__WEBPACK_IMPORTED_MODULE_3___default.a.Collapsible.init(collapsibles[i]);
+            }
+          });
+
+          _this3.setState({
+            nombre: "",
+            senasParticulares: "",
+            sexo: 1,
+            tamanoId: 1,
+            fechaNacimiento: "",
+            razaId: 1
+          });
+
+          materialize_css__WEBPACK_IMPORTED_MODULE_3___default.a.Modal.init(_this3.Modal).close();
+          materialize_css__WEBPACK_IMPORTED_MODULE_3___default.a.updateTextFields();
+        }
+      });
+    }
+  }, {
+    key: "ButtonDelete",
+    value: function ButtonDelete(id) {
+      var _this4 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a["delete"]("/delete-perrito/".concat(id)).then(function (res) {
+        if (res.data.complete) {
+          axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/inforazas').then(function (res) {
+            _this4.setState({
+              informacion: res.data,
+              isLoaded: true
+            });
+
+            var tabs = document.querySelectorAll('.tabs');
+
+            for (var i = 0; i < tabs.length; i++) {
+              materialize_css__WEBPACK_IMPORTED_MODULE_3___default.a.Tabs.init(tabs[i]);
+            }
+
+            var collapsibles = document.querySelectorAll('.collapsible');
+
+            for (var i = 0; i < collapsibles.length; i++) {
+              materialize_css__WEBPACK_IMPORTED_MODULE_3___default.a.Collapsible.init(collapsibles[i]);
+            }
+          });
+        }
       });
     }
   }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
+      var _this5 = this;
 
-      var _this$state = this.state,
-          informacion = _this$state.informacion,
-          isLoaded = _this$state.isLoaded;
+      var _this$state2 = this.state,
+          informacion = _this$state2.informacion,
+          isLoaded = _this$state2.isLoaded;
 
       if (!isLoaded) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), "Cargando ...");
@@ -43153,7 +43298,7 @@ var ContentRazas = /*#__PURE__*/function (_React$Component) {
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
             className: "col s12 "
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
-            className: "collapsible"
+            className: "collapsible popout"
           }, item.get_perritos.map(function (perrito) {
             return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
               key: perrito.id
@@ -43173,29 +43318,147 @@ var ContentRazas = /*#__PURE__*/function (_React$Component) {
               className: "blue-text"
             }, "Tama\xF1o: "), " ", perrito.get_tamano.tamano), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
               className: "blue-text"
-            }, "Fecha de nacimiento: "), " ", perrito.fecha_nacimiento))));
+            }, "Fecha de nacimiento: "), " ", perrito.fecha_nacimiento)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+              className: "btn-small yellow darken-1"
+            }, "Editar"), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+              className: "btn-small red darken-2",
+              onClick: function onClick() {
+                return _this5.ButtonDelete(perrito.id);
+              }
+            }, "Eliminar")));
           }))))));
         }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          className: "fixed-action-btn"
+          className: "fixed-action-btn",
+          ref: function ref(floatingButton) {
+            _this5.floatingButton = floatingButton;
+          }
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-          className: "btn-floating btn-large modal-trigger",
-          href: "#modal1"
-        }, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+          className: "btn-floating btn-large"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
           className: "large material-icons"
-        }, "mode_edit"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        }, "apps")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+          className: "btn-floating red"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+          className: "material-icons"
+        }, "delete"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+          className: "btn-floating yellow darken-1"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+          className: "material-icons"
+        }, "edit"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+          className: "btn-floating green modal-trigger",
+          href: "#modaladd"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+          className: "material-icons"
+        }, "add"))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           ref: function ref(Modal) {
-            _this3.Modal = Modal;
+            _this5.Modal = Modal;
           },
-          id: "modal1",
+          id: "modaladd",
           className: "modal bottom-sheet"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "modal-content"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", null, "Agregar")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          className: "modal-footer"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-          href: "#!",
-          className: "modal-close waves-effect waves-green btn-flat"
-        }, "Agree"))));
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", null, "Agregar Perrito"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "container"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "row"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+          className: "col s12"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "row"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "input-field col s6"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+          id: "nombre",
+          type: "text",
+          value: this.state.nombre,
+          onChange: this.handleNombre
+        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+          htmlFor: "nombre"
+        }, "Nombre")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "input-field col s6"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+          ref: function ref(SelectSexo) {
+            _this5.SelectSexo = SelectSexo;
+          },
+          defaultValue: this.state.sexo,
+          onChange: this.dropdownChangeSexo.bind(this)
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: "0",
+          disabled: true
+        }, "Selecciona una opci\xF3n"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: "1"
+        }, "Macho"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: "2"
+        }, "Hembra")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Sexo"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "row"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "input-field col s6"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+          id: "fechaNacimiento",
+          type: "text",
+          value: this.state.fechaNacimiento,
+          onChange: this.changeFechaNacimiento
+        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+          htmlFor: "fechaNacimiento"
+        }, "Fecha Nacimiento (yyyy-mm-dd)")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "input-field col s6"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+          ref: function ref(SelectTamano) {
+            _this5.SelectTamano = SelectTamano;
+          },
+          defaultValue: this.state.tamanoId,
+          onChange: this.dropdownChangeTamano.bind(this)
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: "0",
+          disabled: true
+        }, "Selecciona una opci\xF3n"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: "1"
+        }, "Peque\xF1o"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: "2"
+        }, "Mediano"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: "3"
+        }, "Grande")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Tama\xF1o"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "row"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "input-field col s6"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+          id: "senasparticulares",
+          type: "text",
+          defaultValue: this.state.senasParticulares,
+          onChange: this.handleSenas.bind(this)
+        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+          htmlFor: "senasparticulares"
+        }, "Se\xF1as Particulares")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "input-field col s6"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+          ref: function ref(SelectRaza) {
+            _this5.SelectRaza = SelectRaza;
+          },
+          defaultValue: this.state.razaId,
+          onChange: this.dropdownChangeRaza.bind(this)
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: "0",
+          disabled: true
+        }, "Selecciona una opci\xF3n"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: "1"
+        }, "American Bully"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: "2"
+        }, "Shorkie"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: "3"
+        }, "Pincher Aleman"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: "4"
+        }, "Border Collie"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: "5"
+        }, "B\xF3xer")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Raza"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "row"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "col s12"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          className: "btn ",
+          onClick: this.submitButton
+        }, "Enviar", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+          className: "material-icons right"
+        }, "send"))))))))));
       }
     }
   }, {
