@@ -7,7 +7,7 @@
 /*require('./bootstrap');*/
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://localhost:8000/api/';
+axios.defaults.baseURL = 'http://laravel-react.test/api/';
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /**

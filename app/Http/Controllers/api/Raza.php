@@ -5,6 +5,8 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\Perritos;
 use App\Models\Raza as ModelRaza;
+use App\Models\Sexo;
+use App\Models\Tamano;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -34,6 +36,7 @@ class Raza extends Controller
             'fecha_nacimiento' => 'required',
         ];
         $validator = Validator::make($request->all(), $rules);
+
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()]);
         }
@@ -49,6 +52,7 @@ class Raza extends Controller
         );
         return response()->json(["complete"=>true]);
     }
+
     function editPerrito(Request $request){
         $rules = [
             'raza_id' => 'required',

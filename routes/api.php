@@ -20,6 +20,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/raza','api\Raza@getRazas');
 Route::get('/inforazas','api\Raza@getInfoRazas');
-Route::post('/add-perrito','api\Raza@addPerrito');
+Route::post('/add-perrito','api\Raza@addPerrito')->name('apiagregar');
 Route::delete('/delete-perrito/{id}','api\Raza@deletePerrito');
 Route::patch('/edit-perrito','api\Raza@editPerrito');
+
+//rutas para las pruebas
+Route::post('/add-Tamano','api\TamanoController@addTamano')->name('api.agregar.tamano');
+Route::patch('/edit-Tamano','api\TamanoController@editTamano')->name('api.edit.tamano');
+Route::delete('/delete-Tamano/{id}','api\TamanoController@deleteTamano')->name('api.delete.tamano');
+

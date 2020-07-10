@@ -43027,7 +43027,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /*require('./bootstrap');*/
 
-axios__WEBPACK_IMPORTED_MODULE_0___default.a.defaults.baseURL = 'http://localhost:8000/api/';
+axios__WEBPACK_IMPORTED_MODULE_0___default.a.defaults.baseURL = 'http://laravel-react.test/api/';
 axios__WEBPACK_IMPORTED_MODULE_0___default.a.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /**
  * Next, we will create a fresh React component instance and attach it to
