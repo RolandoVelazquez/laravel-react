@@ -11,7 +11,8 @@ class PerritoSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\Perritos::create([
+        factory(\App\Models\Perritos::class)->create();
+        /*\App\Models\Perritos::create([
            'raza_id'=>1,
            'sexo_id'=>2,
            'nombre'=>'Pablo',
@@ -82,6 +83,6 @@ class PerritoSeeder extends Seeder
            'fecha_nacimiento'=>'2015-04-02',
            'senas_particulares'=>null,
            'foto'=>'foto-perro-8.jpg'
-        ]);
+        ]);*/
     }
 }
